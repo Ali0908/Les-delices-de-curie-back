@@ -1,0 +1,11 @@
+{% extends 'back/base_back.html.twig' %}
+
+{% block title %}Nouvelle Recette{% endblock %}
+
+{% block content %}
+    <h1>Create new Movie</h1>
+
+    {{ include('back/recipe/_form.html.twig') }}
+
+    <a href="{{ path('app_back_recipe_index') }}">retour</a>
+{% endblock %}

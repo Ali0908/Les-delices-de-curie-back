@@ -1,0 +1,75 @@
+{% extends 'back/base_back.html.twig' %}
+
+{% block title %}Recette{% endblock %}
+
+{% block content %}
+    <h1> {{ recipe.categories|capitalize }} "{{ recipe.name }}"</h1>
+
+    <a href="{{ path('app_back_recipe_index') }}">retour à la liste</a>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ recipe.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ recipe.name}}</td>
+            </tr>
+            <tr>
+                <th>Catégorie</th>
+                <td>{{ recipe.categories }}</td>
+            </tr>
+            <tr>
+                <th>Difficulté</th>
+                <td>{{ recipe.difficulties }}</td>
+            </tr>
+            <tr>
+                <th>Commentaires</th>
+                <td>{{ recipe.difficulties }}</td>
+            </tr>
+             <tr>
+                <th>Quantité</th>
+                <td>{{ recipe.quantity }}</td>
+            </tr>
+            <tr>
+                <th>Likes</th>
+                <td>{{ recipe.likes }}</td>
+            </tr>
+            <tr>
+                <th>Favoris</th>
+                <td>{{ recipe.favorites }}</td>
+            </tr>
+        
+            <tr>
+                <th>Durée</th>
+                <td>{{ recipe.duration }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ recipe.duration}}</td>
+            </tr>
+            <tr>
+                <th>Etapes de préparation</th>
+                <td>{{ recipe.steps }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td>
+                    <img src="{{ recipe.image }}" />
+                </td>
+            </tr>
+           
+        </tbody>
+    </table>
+
+    
+    <div class="btn-group" role="group">
+        <a class="btn btn-primary" href="{{ path('app_back_recipe_show', {'id': recipe.id}) }}">show</a>
+        {# On affiche le formulaire/bouton de supression que au ROLE_ADMIN #}
+        {% if is_granted('ROLE_ADMIN') %}
+            {{ include('back/recipe/_delete_form.html.twig') }}
+        {% endif %}
+    </div>
+{% endblock %}

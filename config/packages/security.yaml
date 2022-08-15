@@ -1,0 +1,92 @@
+security:
+    enable_authenticator_manager: true
+    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    providers:
+        users_in_memory: { memory: null }
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: users_in_memory
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#the-firewall
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+# l'ordre des ces deux ACL est important
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/recipe, roles: PUBLIC_ACCESS }
+        - { path: ^/api/category, roles: PUBLIC_ACCESS }
+        - { path: ^/api/ingredient,roles: PUBLIC_ACCESS }
+            
+        # Front : Si ROLE_USER : ajouter une recette 
+        # Il faut que je pense à enlever le bouton dans la vue
+        # - { path: ^/movie/\d+/review/add, roles: ROLE_USER }
+        - { path: /api/recipe/add$, roles: [ROLE_USER] }
+        # Si ROLE_USER : ajouter un commentaire pour la recette.
+        - { path: /api/comment/add$, roles: [ROLE_USER] }
+         # Si ROLE_USER : ajouter un ingrédient pour la recette.
+        - { path: /api/ingredient/add$, roles: [ROLE_USER] }
+
+         # Front : Si ROLE_USER : modifier une recette 
+        # Il faut que je pense à enlever le bouton dans la vue
+        # - { path: ^/movie/\d+/review/add, roles: ROLE_USER }
+        - { path: /api/recipe/edit$, roles: [ROLE_USER] }
+        # Si ROLE_USER : modifier un commentaire pour la recette.
+        - { path: /api/comment/edit$, roles: [ROLE_USER] }
+         # Si ROLE_USER : modifier un ingrédient pour la recette.
+        - { path: /api/ingredient/edit$, roles: [ROLE_USER] }
+
+   # Front : Si ROLE_ADMIN : surprimer une recette 
+        # Il faut que je pense à enlever le bouton dans la vue
+        # - { path: ^/movie/\d+/review/add, roles: ROLE_USER }
+        - { path: /api/recipe/delete$, roles: [ROLE_ADMIN] }
+        # Si ROLE_USER : supprimer un commentaire pour la recette.
+        - { path: /api/comment/delete$, roles: [ROLE_ADMIN] }
+         # Si ROLE_USER : supprimer un ingrédient pour la recette.
+        - { path: /api/ingredient/delete$, roles: [ROLE_ADMIN] }
+
+
+
+
+
+        
+        # Si ROLE_USER : ajouter un like pour la recette.
+        # Back : Sécuriser toutes les routes /add /edit /delete avec ROLE_ADMIN.
+        #- { path: ^/back/(.*)/(new|edit), roles: [ROLE_ADMIN] }
+        # on peut être plus précis est spécifier la méthode HTTP
+        # delete
+        #- { path: ^/back/(.*)/\d+$, roles: [ROLE_ADMIN] , methods: [POST]}
+        # Back : Si ROLE_MANAGER : accès aux pages de listes movie, genres etc. et pages show (si existantes).
+        # toutes les routes commençant par /back
+        # qui n'ont pas été gérées par les règles précédentes
+        #- { path: ^/back, roles: ROLE_MANAGER }
+
+        # Front : Si user ANONYME : page d'accueil + fiche film seulement.
+        # à partie d'ici si la route n'a pas été gérée par les règles précédentes
+        # pas de restriction de droits, openbar
+    role_hierarchy:
+        # ADMIN ait les mêmes droits que USER        
+        ROLE_ADMIN : ROLE_USER
+when@test:
+    security:
+        password_hashers:
+            # By default, password hashers are resource intensive and take time. This is
+            # important to generate secure password hashes. In tests however, secure hashes
+            # are not important, waste resources and increase test times. The following
+            # reduces the work factor to the lowest possible values.
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4 # Lowest possible value for bcrypt
+                time_cost: 3 # Lowest possible value for argon
+                memory_cost: 10 # Lowest possible value for argon

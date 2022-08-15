@@ -1,0 +1,50 @@
+{% extends 'back/base_back.html.twig' %}
+
+{% block title %}Ingrédients{% endblock %}
+
+{% block content %}
+<main class="mb-4">
+    <div class="container px-4 px-lg-6">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="my-5">
+                    <h1 class="my-5">Ingrédients</h1>
+
+                    {{ include('_flash_messages.html.twig') }}
+
+    <a class="btn btn-success" href="{{ path('app_back_recipe_new') }}">Ajouter un ingrédient</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Unit</th>
+               
+                {# <th>actions</th> #}
+            </tr>
+        </thead>
+        <tbody>
+        {% for ingredient in ingredients %}
+            <tr>
+                <td>{{ ingredient.id }}</td>
+                <td>{{ ingredient.name }}</td>
+                <td>{{ ingredient.unit }}</td>
+                <td>
+                    <a class="btn btn-sm btn-primary" href="{{ path('app_back_recipe_show', {'id': ingredient.id}) }}">show</a>
+                    <a class="btn btn-sm btn-success" href="{{ path('app_back_recipe_edit', {'id': ingredient.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">Aucune recette trouvée</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+                        </div>
+                    </div>
+				</div>
+			</div>
+		</main>
+{% endblock %}
